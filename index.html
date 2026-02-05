@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Advanced System Dashboard V4.2 Fixed</title>
+    <title>Advanced System Dashboard V5.0 Ultimate</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --card-glass: rgba(30, 41, 59, 0.75);
-            --border-glass: 1px solid rgba(255, 255, 255, 0.08);
+            --bg-dark: #050b14;
+            --card-glass: rgba(16, 23, 42, 0.65);
+            --border-glass: 1px solid rgba(255, 255, 255, 0.1);
+            --border-glow: 1px solid rgba(6, 182, 212, 0.3);
             --accent-cyan: #06b6d4;
-            --accent-purple: #8b5cf6;
+            --accent-purple: #a855f7;
             --accent-green: #10b981;
             --accent-red: #ef4444;
             --accent-yellow: #facc15;
             --accent-orange: #f97316;
-            --accent-blue: #3b82f6;
-            --text-primary: #f1f5f9;
+            --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
         }
 
@@ -28,113 +28,137 @@
             -webkit-user-select: none; user-select: none;
             -webkit-touch-callout: none; cursor: default;
             background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 80%);
+            /* خلفية أكثر عمقاً وحيوية */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
+                linear-gradient(180deg, #0f172a 0%, #020617 100%);
             color: var(--text-primary);
             font-family: 'Cairo', sans-serif;
             margin: 0 auto; 
-            padding: 16px;
+            padding: 20px;
             min-height: 100vh;
-            padding-bottom: 40px;
             max-width: 600px; 
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            overflow-x: hidden;
         }
         
-        img { pointer-events: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+        /* عناوين الأقسام */
         .section-title {
-            font-size: 14px; color: var(--text-secondary);
-            margin: 20px 0 8px 0; display: flex; align-items: center; gap: 8px;
+            font-size: 13px; 
+            color: var(--accent-cyan);
+            margin: 25px 0 10px 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+            opacity: 0.9;
         }
-        .section-title i { color: var(--accent-cyan); }
+        .section-title i { filter: drop-shadow(0 0 5px var(--accent-cyan)); }
 
+        /* تصميم الكروت الزجاجية */
         .glass-card {
             background: var(--card-glass);
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: var(--border-glass);
-            border-radius: 20px;
-            padding: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-            margin-bottom: 12px;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            margin-bottom: 16px;
+            animation: fadeInUp 0.6s ease-out backwards;
         }
 
+        /* الهيدر (صورة المستخدم) */
         .profile-header {
             display: flex; align-items: center; gap: 16px;
+            background: linear-gradient(135deg, rgba(30,41,59,0.8) 0%, rgba(15,23,42,0.9) 100%);
+            border: var(--border-glow);
         }
         .avatar-img {
-            width: 60px; height: 60px; border-radius: 50%;
-            border: 2px solid var(--accent-cyan);
+            width: 65px; height: 65px; border-radius: 50%;
+            border: 3px solid var(--accent-purple);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
             object-fit: cover;
             background-color: #000;
         }
-        .user-info {
-            flex: 1;
-        }
         .user-info h2 { 
-            margin: 0; 
-            font-size: 18px; 
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
+            margin: 0; font-size: 18px; 
+            display: flex; align-items: center; gap: 8px; 
+            color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         .premium-badge {
             color: var(--accent-blue);
-            font-size: 16px;
-            display: none;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 0 8px var(--accent-blue));
+            animation: pulse-glow 2s infinite;
         }
-        .user-info span { font-family: 'Fira Code'; font-size: 12px; color: var(--accent-purple); direction: ltr; display: block; text-align: right; }
-
-        @keyframes popIn {
-            0% { transform: scale(0); }
-            100% { transform: scale(1); }
+        .user-info span { 
+            font-family: 'Fira Code'; font-size: 11px; 
+            color: var(--text-secondary); direction: ltr; display: block; text-align: right; margin-top: 4px;
+            background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 6px; width: fit-content; margin-left: auto;
         }
 
+        /* الشبكة (Grid) */
         .info-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
-        @media (max-width: 350px) {
-            .info-grid { grid-template-columns: 1fr; }
-            .full-span { grid-column: span 1; }
-        }
         
+        /* عناصر المعلومات */
         .info-item {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 14px;
             display: flex; flex-direction: column;
             overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
-        .info-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
         
-        /* تحسين عرض القيم الرقمية */
+        /* تأثير عند اللمس */
+        .info-item:active, .info-item:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
+        }
+
+        .info-label { 
+            font-size: 10px; color: var(--text-secondary); margin-bottom: 6px; 
+            display: flex; align-items: center; gap: 6px;
+            font-weight: 600;
+        }
+        .info-label i { color: var(--accent-purple); width: 14px; text-align: center; }
+
         .info-value { 
             font-family: 'Fira Code'; 
             font-size: 13px; 
-            font-weight: bold; 
+            font-weight: 700; 
             color: #fff; 
             word-break: break-all;
             direction: ltr;
             text-align: right;
-            unicode-bidi: plaintext;
         }
         
         .full-span { grid-column: span 2; }
 
+        /* حاوية السائل (الجيروسكوب) */
         .liquid-container {
             position: relative;
-            width: 100%; height: 160px;
-            background: rgba(15, 23, 42, 0.6);
+            width: 100%; height: 180px;
+            background: #020617;
             border-radius: 24px;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: var(--border-glow);
             display: flex; justify-content: center; align-items: center;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-            margin-top: 15px;
-            cursor: pointer; /* ليشعر المستخدم أنها قابلة للنقر */
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+            margin-top: 20px;
+            cursor: pointer;
         }
 
         .liquid-box {
@@ -142,151 +166,156 @@
             top: 50%; left: 50%;
             width: 300%; height: 300%;
             transform: translate(-50%, -50%);
-            transition: transform 0.1s linear; /* جعل الحركة أنعم */
+            transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .water {
-            position: absolute;
-            bottom: 50%; 
-            left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(6,182,212,0.6) 0%, rgba(37,99,235,0.8) 100%);
-            transform-origin: 50% 100%;
+            background: linear-gradient(180deg, rgba(6,182,212,0.8) 0%, rgba(139, 92, 246, 0.9) 100%);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
         }
-        
-        .water::before, .water::after {
-            content: "";
-            position: absolute; width: 200%; height: 200%;
-            top: -50%; left: -50%;
-            background: rgba(255,255,255,0.4);
-            border-radius: 40%;
-            animation: wave 8s linear infinite;
-        }
-        .water::after {
-            background: rgba(255,255,255,0.1);
-            border-radius: 45%;
-            animation: wave 12s linear infinite;
-        }
-
-        @keyframes wave { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .gyro-text {
-            position: relative; z-index: 10;
-            text-align: center;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-            pointer-events: none;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
+        /* شريط البطارية */
         .bar-container {
-            height: 10px; background: rgba(255,255,255,0.1);
-            border-radius: 6px; overflow: hidden; margin-top: 8px;
+            height: 6px; background: rgba(255,255,255,0.1);
+            border-radius: 10px; overflow: hidden; margin-top: 10px;
         }
         .bar-fill { 
             height: 100%; 
-            border-radius: 6px; 
-            transition: width 0.5s ease, background-color 0.5s ease; 
+            border-radius: 10px; 
+            box-shadow: 0 0 10px currentColor;
+            transition: width 0.5s ease;
         }
 
+        /* شاشة التحميل */
         #loading {
-            position: fixed;
-            inset: 0;
-            background: rgba(15,23,42,0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            color: var(--accent-cyan);
+            position: fixed; inset: 0;
+            background: #020617;
+            display: flex; flex-direction: column; gap: 15px;
+            align-items: center; justify-content: center;
+            font-size: 1.2rem; color: var(--accent-cyan);
             z-index: 9999;
         }
+        .spinner {
+            width: 50px; height: 50px;
+            border: 3px solid rgba(6, 182, 212, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-cyan);
+            animation: spin 1s ease-in-out infinite;
+        }
 
+        /* الأزرار */
         .copy-btn {
-            font-size: 12px;
-            color: var(--accent-cyan);
-            cursor: pointer;
-            margin-left: 8px;
-            user-select: auto;
-            float: left;
+            background: rgba(6, 182, 212, 0.1);
+            padding: 2px 8px; border-radius: 4px;
+            font-size: 10px; color: var(--accent-cyan);
+            cursor: pointer; float: left;
+            transition: 0.2s;
+            border: 1px solid transparent;
         }
-        
-        /* تنبيه لتفعيل الحساسات */
-        .sensor-alert {
-            font-size: 10px; color: var(--accent-yellow); margin-top:5px;
-            animation: pulse 2s infinite;
+        .copy-btn:hover {
+            background: var(--accent-cyan); color: #000;
         }
-        @keyframes pulse { 0% {opacity: 0.6;} 50% {opacity: 1;} 100% {opacity: 0.6;} }
+
+        /* Animations */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-glow { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 5px var(--accent-blue)); } 50% { opacity: 0.7; filter: drop-shadow(0 0 2px var(--accent-blue)); } }
+
+        /* Font Tags Style */
+        .font-tag {
+            font-size: 9px; padding: 3px 8px; 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px; 
+            color: var(--text-secondary);
+        }
+
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <div id="loading"><i class="fa-solid fa-spinner fa-spin"></i> جاري التحميل والفحص...</div>
+    <div id="loading">
+        <div class="spinner"></div>
+        <span>جاري الفحص الدقيق...</span>
+    </div>
 
-    <div class="glass-card profile-header">
+    <div class="glass-card profile-header" style="animation-delay: 0.1s;">
         <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="user-photo" class="avatar-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
         <div class="user-info">
             <h2 id="user-name">
                 جاري المعالجة... 
-                <i class="fa-solid fa-certificate premium-badge" id="premium-icon" title="Premium Account"></i>
+                <i class="fa-solid fa-certificate premium-badge" id="premium-icon" title="حساب مميز"></i>
             </h2>
-            <span id="user-id">ID: ---</span>
+            <span id="user-id"><i class="fa-solid fa-fingerprint"></i> ID: ---</span>
         </div>
-        <div style="margin-right: auto; color: var(--accent-green);">
-            <i class="fa-solid fa-shield-halved"></i>
+        <div style="margin-right: auto; color: var(--accent-green); filter: drop-shadow(0 0 5px var(--accent-green));">
+            <i class="fa-solid fa-shield-halved fa-xl"></i>
         </div>
     </div>
 
-    <div class="section-title"><i class="fa-solid fa-globe"></i> الشبكة والموقع</div>
-    <div class="glass-card info-grid">
+    <div class="section-title"><i class="fa-solid fa-globe"></i> الشبكة والموقع الجغرافي</div>
+    <div class="glass-card info-grid" style="animation-delay: 0.2s;">
         <div class="info-item full-span">
-            <span class="info-label">عنوان IP (Public)</span>
-            <span class="info-value" id="val-ip" style="color: var(--accent-cyan);">جاري الفحص...</span>
+            <span class="info-label"><i class="fa-solid fa-earth-americas"></i> IP العام (Public)</span>
+            <span class="info-value" id="val-ip" style="color: var(--accent-cyan); text-shadow: 0 0 10px rgba(6,182,212,0.4);">جاري الفحص...</span>
         </div>
         <div class="info-item">
-            <span class="info-label">Local IP (WebRTC)</span>
+            <span class="info-label"><i class="fa-solid fa-network-wired"></i> IP المحلي (WebRTC)</span>
             <span class="info-value" id="val-local-ip-webrtc">--</span>
         </div>
         <div class="info-item">
-            <span class="info-label">مزود الخدمة (ISP)</span>
+            <span class="info-label"><i class="fa-solid fa-server"></i> المزود (ISP)</span>
             <span class="info-value" id="val-isp">--</span>
         </div>
         <div class="info-item full-span">
-            <span class="info-label">الدولة والمدينة</span>
+            <span class="info-label"><i class="fa-solid fa-location-dot"></i> الدولة والمدينة</span>
             <span class="info-value" id="val-loc">--</span>
         </div>
         <div class="info-item full-span">
-            <span class="info-label">Timezone</span>
+            <span class="info-label"><i class="fa-regular fa-clock"></i> المنطقة الزمنية</span>
             <span class="info-value" id="val-timezone">--</span>
         </div>
     </div>
 
-    <div class="section-title"><i class="fa-solid fa-microchip"></i> العتاد والبيانات المتقدمة</div>
-    <div class="glass-card info-grid">
-        <div class="info-item"><span class="info-label">نوع الجهاز</span><span class="info-value" id="val-dev-type">📱 phone</span></div>
-        <div class="info-item"><span class="info-label">لغة النظام</span><span class="info-value" id="val-lang">--</span></div>
-        <div class="info-item"><span class="info-label">دقة الشاشة</span><span class="info-value" id="val-res">--</span></div>
-        <div class="info-item"><span class="info-label">Pixel Ratio</span><span class="info-value" id="val-pixel-ratio">--</span></div>
-        <div class="info-item"><span class="info-label">عمق الألوان</span><span class="info-value" id="val-color">--</span></div>
-        <div class="info-item"><span class="info-label">المتصفح</span><span class="info-value" id="val-browser">--</span></div>
-        <div class="info-item"><span class="info-label">وضع الشاشة</span><span class="info-value" id="val-orient">--</span></div>
-        <div class="info-item"><span class="info-label">المعالج</span><span class="info-value" id="val-cores">--</span></div>
-        <div class="info-item"><span class="info-label">الرامات</span><span class="info-value" id="val-ram">--</span></div>
+    <div class="section-title"><i class="fa-solid fa-microchip"></i> العتاد والنظام</div>
+    <div class="glass-card info-grid" style="animation-delay: 0.3s;">
+        <div class="info-item"><span class="info-label"><i class="fa-solid fa-mobile-screen"></i> الجهاز</span><span class="info-value" id="val-dev-type">📱 phone</span></div>
+        <div class="info-item"><span class="info-label"><i class="fa-solid fa-language"></i> اللغة</span><span class="info-value" id="val-lang">--</span></div>
+        <div class="info-item"><span class="info-label"><i class="fa-solid fa-desktop"></i> الدقة</span><span class="info-value" id="val-res">--</span></div>
+        <div class="info-item"><span class="info-label"><i class="fa-solid fa-expand"></i> النسبة</span><span class="info-value" id="val-pixel-ratio">--</span></div>
+        <div class="info-item"><span class="info-label"><i class="fa-solid fa-palette"></i> الألوان</span><span class="info-value" id="val-color">--</span></div>
+        <div class="info-item"><span class="info-label"><i class="fa-brands fa-chrome"></i> المتصفح</span><span class="info-value" id="val-browser">--</span></div>
+        <div class="info-item"><span class="info-label"><i class="fa-solid fa-rotate"></i> الوضع</span><span class="info-value" id="val-orient">--</span></div>
+        <div class="info-item"><span class="info-label"><i class="fa-solid fa-memory"></i> المعالج</span><span class="info-value" id="val-cores">--</span></div>
+        <div class="info-item"><span class="info-label"><i class="fa-solid fa-sd-card"></i> الرامات</span><span class="info-value" id="val-ram">--</span></div>
+        
         <div class="info-item full-span">
-            <span class="info-label">كارت الشاشة (GPU)</span>
+            <span class="info-label"><i class="fa-solid fa-gamepad"></i> كارت الشاشة (GPU)</span>
             <span class="info-value" id="val-gpu" style="color: var(--accent-orange);">جاري الفحص...</span>
         </div>
         <div class="info-item full-span">
-            <span class="info-label">الخطوط المكتشفة</span>
-            <div id="fonts-container" style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;"></div>
+            <span class="info-label"><i class="fa-solid fa-font"></i> الخطوط المثبتة</span>
+            <div id="fonts-container" style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px;"></div>
         </div>
         <div class="info-item full-span">
-            <span class="info-label">الشبكة والسرعة</span>
+            <span class="info-label"><i class="fa-solid fa-gauge-high"></i> نوع الاتصال والسرعة</span>
             <span class="info-value" id="val-net-speed" style="color:var(--accent-green);">جاري القياس...</span>
         </div>
         <div class="info-item full-span">
-            <span class="info-label">الوقت الحالي</span>
+            <span class="info-label"><i class="fa-solid fa-hourglass-half"></i> وقت النظام</span>
             <span class="info-value" id="val-time">--</span>
         </div>
         <div class="info-item full-span">
             <div style="display:flex; justify-content:space-between;">
-                <span class="info-label">البطارية</span>
+                <span class="info-label"><i class="fa-solid fa-battery-half"></i> حالة البطارية</span>
                 <span class="info-label" id="val-bat-txt" style="font-weight:bold;">--</span>
             </div>
             <div class="bar-container">
@@ -295,46 +324,46 @@
         </div>
     </div>
 
-    <div class="section-title"><i class="fa-solid fa-fingerprint"></i> بصمات متقدمة</div>
-    <div class="glass-card info-grid">
+    <div class="section-title"><i class="fa-solid fa-fingerprint"></i> البصمات الرقمية</div>
+    <div class="glass-card info-grid" style="animation-delay: 0.4s;">
         <div class="info-item full-span">
-            <span class="info-label">Canvas Fingerprint</span>
+            <span class="info-label"><i class="fa-solid fa-image"></i> بصمة Canvas</span>
             <span class="info-value" id="val-canvas">جاري الحساب...</span>
-            <span class="copy-btn" onclick="copyToClipboard('val-canvas')">نسخ</span>
+            <span class="copy-btn" onclick="copyToClipboard('val-canvas')"><i class="fa-solid fa-copy"></i> نسخ</span>
         </div>
         <div class="info-item full-span">
-            <span class="info-label">Audio Fingerprint</span>
+            <span class="info-label"><i class="fa-solid fa-wave-square"></i> بصمة الصوت (Audio)</span>
             <span class="info-value" id="val-audio">جاري الحساب...</span>
-            <span class="copy-btn" onclick="copyToClipboard('val-audio')">نسخ</span>
+            <span class="copy-btn" onclick="copyToClipboard('val-audio')"><i class="fa-solid fa-copy"></i> نسخ</span>
         </div>
         <div class="info-item full-span">
-            <span class="info-label">WebRTC Local IPs</span>
+            <span class="info-label"><i class="fa-solid fa-bug"></i> WebRTC Leaks</span>
             <span class="info-value" id="val-webrtc-ips">--</span>
         </div>
         <div class="info-item full-span">
-            <span class="info-label">Sensors (Accel/Gyro)</span>
+            <span class="info-label"><i class="fa-solid fa-compass"></i> الحساسات (Live Data)</span>
             <span class="info-value" id="val-sensors">--</span>
         </div>
     </div>
 
-    <div class="section-title"><i class="fa-solid fa-compass"></i> الحركة</div>
-    <div class="liquid-container" id="liquid-trigger" onclick="requestSensorPermission()">
+    <div class="section-title"><i class="fa-solid fa-scale-balanced"></i> توازن الجهاز</div>
+    <div class="liquid-container" id="liquid-trigger" onclick="requestSensorPermission()" style="animation-delay: 0.5s; animation-name: fadeInUp; animation-fill-mode: backwards;">
         <div class="liquid-box" id="liquid-box">
             <div class="water"></div>
         </div>
         
         <div class="gyro-text">
-            <h3 style="margin:0; font-size:18px;">Device balance</h3>
-            <p id="gyro-vals" style="margin:4px 0 0; font-family:'Fira Code'; font-size:12px; color:var(--accent-cyan);">X: 0° | Y: 0°</p>
-            <p id="gyro-status" style="margin:8px 0 0; font-size:11px; color:rgba(255,255,255,0.6);">
-                اضغط هنا لتفعيل حركة الماء
+            <h3 style="margin:0; font-size:16px; color:#fff;"><i class="fa-solid fa-arrows-up-down-left-right"></i> Balance Check</h3>
+            <p id="gyro-vals" style="margin:4px 0 0; font-family:'Fira Code'; font-size:12px; color:var(--accent-cyan);">Waiting for motion...</p>
+            <p id="gyro-status" style="margin:8px 0 0; font-size:10px; color:rgba(255,255,255,0.6);">
+                اضغط هنا لتفعيل المحاكاة الحية
             </p>
-            <div id="sensor-alert" class="sensor-alert" style="display:none;">⚠️ اضغط لتشغيل الحساسات</div>
+            <div id="sensor-alert" class="sensor-alert" style="display:none;">⚠️ السماح بالحساسات مطلوب</div>
         </div>
     </div>
     
-    <div style="text-align:center; margin-top:20px; color:#555; font-size:11px;">
-        By Black devil 
+    <div style="text-align:center; margin-top:30px; margin-bottom: 20px; color:var(--text-secondary); font-size:10px; opacity: 0.5;">
+        SECURE SYSTEM V5.0 • BY BLACK DEVIL 
     </div>
 
     <script>
@@ -596,7 +625,8 @@
         const container = document.getElementById('fonts-container');
         fonts.forEach(f => {
             const span = document.createElement("span");
-            span.style.cssText = `font-family:${f}; font-size:10px; padding:2px 6px; background:rgba(255,255,255,0.05); border-radius:4px; color:var(--text-secondary);`;
+            // تعديل ستايل الخطوط ليناسب التصميم الجديد
+            span.className = "font-tag";
             span.textContent = f;
             container.appendChild(span);
         });
@@ -699,7 +729,7 @@
             const user = tg.initDataUnsafe.user;
             if (user) {
                 document.getElementById('user-name').firstChild.textContent = (user.first_name || 'مستخدم') + ' ';
-                document.getElementById('user-id').innerText = `ID: ${user.id}`;
+                document.getElementById('user-id').innerHTML = `<i class="fa-solid fa-fingerprint"></i> ID: ${user.id}`;
 
                 // إصلاح جلب الصورة
                 if (user.photo_url) {
@@ -755,6 +785,7 @@
                                     lvl <= 50 ? 'var(--accent-yellow)' : 'var(--accent-green)';
 
                         document.getElementById('bat-bar').style.backgroundColor = color;
+                        document.getElementById('bat-bar').style.boxShadow = `0 0 10px ${color}`;
                         document.getElementById('val-bat-txt').style.color = color;
 
                         // تصحيح Syntax
